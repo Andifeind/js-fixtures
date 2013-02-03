@@ -1,5 +1,3 @@
-The code was completely refactored from the awesome jasmine-jquery with all jasmine and jquery dependencies removed, specs written with Chai + Mocha, and using an iframe implementation as a sandbox.  This allows the fixtures to be more portable and minimizes side effects with the test runner.
-
 This is a fork of badunk/js-fixtures  
 I'm using a `<div>` container as a sandbox instead of an `<iframe>` and I changed the default path for fixtures
 to `./fixtures/`
