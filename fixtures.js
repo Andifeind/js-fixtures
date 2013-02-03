@@ -17,19 +17,19 @@
         var self = this;
 
         self.containerId = 'js-fixtures';
-        self.path = 'spec/javascripts/fixtures';
-        self.window = function(){
-            var iframe = document.getElementById(self.containerId);
-            if (!iframe) return null;
+        self.path = 'fixtures';
+        // self.window = function(){
+        //     var iframe = document.getElementById(self.containerId);
+        //     if (!iframe) return null;
 
-            return iframe.contentWindow || iframe.contentDocument; 
-        };
-        self.body = function(){
-            if (!self.window()) return null;
+        //     return iframe.contentWindow || iframe.contentDocument; 
+        // };
+        // self.body = function(){
+        //     if (!self.window()) return null;
 
-            var content = self.window().document.body.innerHTML;
-            return content; 
-        };
+        //     var content = self.window().document.body.innerHTML;
+        //     return content; 
+        // };
         self.set = function(html){
             self.cleanUp();
             addToContainer(html);
@@ -60,31 +60,27 @@
             fixturesCache = {};
         };
         self.cleanUp = function(){
-            var iframe = document.getElementById(self.containerId);
-            if(!iframe) return null;
+            var div = document.getElementById(self.containerId);
+            if(!div) {
+                return null;
+            }
 
-            iframe.parentNode.removeChild(iframe);
+            div.parentNode.removeChild(div);
         };
         var createContainer  = function(html){
 
-            var iframe = document.createElement('iframe');
-            iframe.setAttribute("id", self.containerId);
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-            var doc = iframe.contentWindow || iframe.contentDocument;
-            doc = doc.document ? doc.document : doc;
-
-            doc.open();
-            doc.write(html);
-            doc.close();
+            var div = document.createElement('div');
+            div.setAttribute("id", self.containerId);
+            div.style.display = "none";
+            document.body.appendChild(div);
+            div.innerHTML = html;
         };
         var addToContainer = function(html){
             var container = document.getElementById(self.containerId);
             if (!container){
                 createContainer(html);
             } else{
-                var iframeWindow = container.contentWindow || container.contentDocument;
-                iframeWindow.document.body.innerHTML += html;
+                container.innerHTML += html;
             }
         };
         var getFixtureHtml = function(url){

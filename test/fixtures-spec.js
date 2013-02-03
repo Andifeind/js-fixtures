@@ -7,11 +7,10 @@ define(function(require){
             var anotherFixtureUrl = "another_url";
             var server = sinon.fakeServer.create();
             var xhr = sinon.useFakeXMLHttpRequest();
-            var fixturesBody = function(){
-                var iframe = document.getElementById(fixtures.containerId);
-                var iframeWindow = iframe.contentWindow || iframe.contentDocument;
+            var fixturesContainer = function(){
+                var div = document.getElementById(fixtures.containerId);
 
-                return iframeWindow.document.body;
+                return div;
             };
             var appendFixturesContainerToDom = function(){
                 fixtures.set('old content');
@@ -36,37 +35,37 @@ define(function(require){
                 it("should set 'js-fixtures' as the default container id", function(){
                     expect(fixtures.containerId).to.equal('js-fixtures');
                 });
-                it("should set 'spec/javascripts/fixtures/' as the default fixtures path", function(){
-                    expect(fixtures.path).to.equal('spec/javascripts/fixtures');
+                it("should set 'fixtures/' as the default fixtures path", function(){
+                    expect(fixtures.path).to.equal('fixtures');
                 });
-                it("should set body to null", function(){
-                    expect(fixtures.body()).to.be(null);
-                });
-                it("should set window to null", function(){
-                    expect(fixtures.window()).to.be(null);
-                });
+                // it("should set body to null", function(){
+                //     expect(fixtures.body()).to.be(null);
+                // });
+                // it("should set window to null", function(){
+                //     expect(fixtures.window()).to.be(null);
+                // });
             });
-            describe("body", function(){
-                it("should not be null when initialized properly", function(){
-                    fixtures.set('test');
-                    expect(fixtures.body()).to.not.be(null);
-                });
-                it("should return the body contents of the iframe", function(){
-                    var sillyString = 'some silly string';
-                    fixtures.set(sillyString);
-                    expect(fixtures.body()).to.equal(sillyString);
-                });
-            });
-            describe("window", function(){
-                it("should return the window object of the iframe", function(){
-                    fixtures.set('test');
-                    expect(fixtures.window()).to.not.equal(window);
-                });
-                it("should contain global vars injected into frame", function(){
-                    fixtures.set('<scr' + 'ipt>' + 'var test = "globalVar"' +  '</scr' + 'ipt>');
-                    expect(fixtures.window().test).to.equal('globalVar');
-                });
-            });
+            // describe("body", function(){
+            //     it("should not be null when initialized properly", function(){
+            //         fixtures.set('test');
+            //         expect(fixtures.body()).to.not.be(null);
+            //     });
+            //     it("should return the body contents of the iframe", function(){
+            //         var sillyString = 'some silly string';
+            //         fixtures.set(sillyString);
+            //         expect(fixtures.body()).to.equal(sillyString);
+            //     });
+            // });
+            // describe("window", function(){
+            //     it("should return the window object of the iframe", function(){
+            //         fixtures.set('test');
+            //         expect(fixtures.window()).to.not.equal(window);
+            //     });
+            //     it("should contain global vars injected into frame", function(){
+            //         fixtures.set('<scr' + 'ipt>' + 'var test = "globalVar"' +  '</scr' + 'ipt>');
+            //         expect(fixtures.window().test).to.equal('globalVar');
+            //     });
+            // });
             describe("read", function(){
                 it("should return fixture HTML", function(){
                     var html = fixtures.read(fixtureUrl);
@@ -95,15 +94,15 @@ define(function(require){
             describe("load", function(){
                 it("should insert fixture HTML into container", function(){
                     fixtures.load(fixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData);
                 });
                 it("should insert duplicated fixture HTML into container when the same url is provided twice in a single call", function(){
                     fixtures.load(fixtureUrl, fixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData + ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData + ajaxData);
                 });
                 it("should insert merged HTML of two fixtures into container when two different urls are provided in a single call", function(){
                     fixtures.load(fixtureUrl, anotherFixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData + ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData + ajaxData);
                 });
                 describe("when fixture container does not exist", function(){
                     it("should automatically create fixtures container and append it to the DOM", function(){
@@ -117,19 +116,19 @@ define(function(require){
                     });
                     it("should replace it with new content", function(){
                         fixtures.load(fixtureUrl);
-                        expect(fixtures.body()).to.equal(ajaxData);
+                        expect(fixturesContainer().innerHTML).to.equal(ajaxData);
                     });
                 });
-                describe("when fixture contains an inline script tag", function(){
-                    beforeEach(function(){
-                        ajaxData = "<script>document.write('test')</script>";
-                        server.respondWith(ajaxData);
-                    });
-                    it("should execute the inline javascript after the fixture has been inserted into the body", function(){
-                        fixtures.load(fixtureUrl);
-                        expect(fixturesBody().innerHTML).to.equal('test');
-                    });
-                });
+                // describe("when fixture contains an inline script tag", function(){
+                //     beforeEach(function(){
+                //         ajaxData = "<script>document.write('test')</script>";
+                //         server.respondWith(ajaxData);
+                //     });
+                //     it("should execute the inline javascript after the fixture has been inserted into the body", function(){
+                //         fixtures.load(fixtureUrl);
+                //         expect(fixturesContainer().innerHTML).to.equal('test');
+                //     });
+                // });
             });
             describe("appendLoad", function(){
                 beforeEach(function(){
@@ -138,15 +137,15 @@ define(function(require){
                 });
                 it("should insert fixture HTML into container", function(){
                     fixtures.appendLoad(fixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData);
                 });
                 it("should insert duplicated fixture html into container when the same url is provided twice in a single call", function(){
                     fixtures.appendLoad(fixtureUrl, anotherFixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData + ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData + ajaxData);
                 });
                 it("should insert merged HTML of two fixtures into container when two different urls are provided in a single call", function(){
                     fixtures.appendLoad(fixtureUrl, anotherFixtureUrl);
-                    expect(fixturesBody().innerHTML).to.equal(ajaxData + ajaxData);
+                    expect(fixturesContainer().innerHTML).to.equal(ajaxData + ajaxData);
                 });
                 it("should automatically create fixtures container and append it to the DOM", function(){
                     fixtures.appendLoad(fixtureUrl);
@@ -159,7 +158,7 @@ define(function(require){
 
                     it("should add new content", function() {
                         fixtures.appendLoad(fixtureUrl);
-                        expect(fixturesBody().innerHTML).to.equal(ajaxData + ajaxData);
+                        expect(fixturesContainer().innerHTML).to.equal(ajaxData + ajaxData);
                     });
 
                     it("should not add a new fixture container", function(){
@@ -167,17 +166,17 @@ define(function(require){
                         expect(document.getElementById(fixtures.containerId)).to.not.be.null;
                     });
                 });
-                describe("when fixture contains an inline script tag", function(){
-                    beforeEach(function(){
-                        ajaxData = '<scr' + 'ipt>document.write("test");</scr' + 'ipt>';
-                        server.respondWith(ajaxData);
-                    });
+                // describe("when fixture contains an inline script tag", function(){
+                //     beforeEach(function(){
+                //         ajaxData = '<scr' + 'ipt>document.write("test");</scr' + 'ipt>';
+                //         server.respondWith(ajaxData);
+                //     });
 
-                    it("should execute the inline javascript after the fixture has been inserted into the body", function(){
-                        fixtures.appendLoad(fixtureUrl);
-                        expect(fixturesBody().innerHTML).to.equal('test');
-                    });
-                });
+                //     it("should execute the inline javascript after the fixture has been inserted into the body", function(){
+                //         fixtures.appendLoad(fixtureUrl);
+                //         expect(fixturesContainer().innerHTML).to.equal('test');
+                //     });
+                // });
             });
             describe("preload", function() {
                 describe("read after preload", function() {
@@ -203,7 +202,7 @@ define(function(require){
             describe("set", function() {
                 it("should insert HTML into container", function() {
                     fixtures.set(html);
-                    expect(fixturesBody().innerHTML.toLowerCase()).to.equal(html);
+                    expect(fixturesContainer().innerHTML.toLowerCase()).to.equal(html);
                 });
 
                 describe("when fixture container does not exist", function() {
@@ -220,7 +219,7 @@ define(function(require){
 
                     it("should replace it with new content", function() {
                         fixtures.set(html);
-                        expect(fixturesBody().innerHTML.toLowerCase()).to.equal(html);
+                        expect(fixturesContainer().innerHTML.toLowerCase()).to.equal(html);
                     });
                 });
             });
@@ -228,7 +227,7 @@ define(function(require){
             describe("appendSet",function(){
                 it("should insert HTML into container", function() {
                     fixtures.appendSet(html);
-                    expect(fixturesBody().innerHTML.toLowerCase()).to.equal(html);
+                    expect(fixturesContainer().innerHTML.toLowerCase()).to.equal(html);
                 });
 
                 describe("when fixture container does not exist", function() {
@@ -245,7 +244,7 @@ define(function(require){
 
                     it("should add new content", function() {
                         fixtures.appendSet(html);
-                        expect(fixturesBody().innerHTML).to.equal(html+html);
+                        expect(fixturesContainer().innerHTML).to.equal(html+html);
                     });
                 });
             });

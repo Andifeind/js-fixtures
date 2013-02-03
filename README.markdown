@@ -1,29 +1,28 @@
 The code was completely refactored from the awesome jasmine-jquery with all jasmine and jquery dependencies removed, specs written with Chai + Mocha, and using an iframe implementation as a sandbox.  This allows the fixtures to be more portable and minimizes side effects with the test runner.
 
+This is a fork of badunk/js-fixtures  
+I'm using a `<div>` container as a sandbox instead of an `<iframe>` and I changed the default path for fixtures
+to `./fixtures/`
+
 ## Installation
 
-Install with npm using `npm install js-fixtures` and include the fixtures.js file in your browser (or just download the raw from github).
+Download the raw from github.
 
 You may also load it using AMD with `require('fixtures')`
 
 ## Usage
 
-Use `fixtures.load('your-fixture.html')` in your specs instead of `jasmine.fixtures.loadFixture('your-fixture.html')`
+Use `fixtures.load('your-fixture.html')` in your specs.
 
-Clean up fixtures with `fixtures.cleanUp` (perhaps in a `afterEach()` block)
-
-## Gotchas (if you're used to jasmine-jquery)
-
--  `set` and `appendSet` methods do not accept jQuery
--  sandbox shortcut was removed from jasmine-jquery
+Clean up fixtures with `fixtures.cleanUp()` (perhaps in a `afterEach()` block)
 
 ## Fixtures
 
 Fixture module allows you to load HTML content to be used by your tests.
     
-By default, fixtures are loaded from `spec/javascripts/fixtures`. You can configure this path: `fixtures.path = 'my/new/path';`.
+By default, fixtures are loaded from `./fixtures/`. You can configure this path: `fixtures.path = 'my/new/path';`.
 
-Your fixture is being loaded into an iframe container that is automatically added to the DOM (If you _REALLY_ must change id of this container, try: `fixtures.containerId = 'my-new-id';` in your test runner). To make tests fully independent, make sure to clean up after your fixtures with `fixtures.cleanUp`. Also, fixtures are internally cached, so you can load the same fixture file in several tests without penalty to your test suite's speed.
+Your fixture is being loaded into a div container that is automatically added to the DOM (If you _REALLY_ must change id of this container, try: `fixtures.containerId = 'my-new-id';` in your test runner). To make tests fully independent, make sure to clean up after your fixtures with `fixtures.cleanUp`. Also, fixtures are internally cached, so you can load the same fixture file in several tests without penalty to your test suite's speed.
     
 Several methods for loading fixtures are provided:
 
@@ -47,11 +46,6 @@ Additionally, two clean up methods are provided:
 - `cleanUp()`
   - cleans-up fixtures container
 
-Finally, there are two convenience properties to access the contents of the sandboxed iframe:
-- `body`
-  - returns the html contents of the body.  Use it to assert various values on the body of the iframe DOM.
-- `window`
-  - returns the global window reference of the iframe, giving you the ability to use the global variables injected into that context.
 
 ## Executing Tests
 Do an `npm install` to grab the test dependencies.  Then point your browser to the index.html file.
