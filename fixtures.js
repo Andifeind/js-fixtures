@@ -60,7 +60,12 @@
 
             var div = document.createElement('div');
             div.setAttribute("id", self.containerId);
-            div.style.display = "none";
+            div.style.position = "absolute";
+            div.style.left = "-1000px";
+            div.style.top = "-1000px";
+            div.style.width = "100px";
+            div.style.height = "100px";
+            div.style.overflow = "hidden";
             document.body.appendChild(div);
             div.innerHTML = html;
         };
