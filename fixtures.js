@@ -18,18 +18,7 @@
 
         self.containerId = 'js-fixtures';
         self.path = 'fixtures';
-        // self.window = function(){
-        //     var iframe = document.getElementById(self.containerId);
-        //     if (!iframe) return null;
-
-        //     return iframe.contentWindow || iframe.contentDocument; 
-        // };
-        // self.body = function(){
-        //     if (!self.window()) return null;
-
-        //     var content = self.window().document.body.innerHTML;
-        //     return content; 
-        // };
+        
         self.set = function(html){
             self.cleanUp();
             addToContainer(html);
